@@ -20,18 +20,20 @@
 Download the `.psm1` file and import the module:
 
 ```powershell
-Import-Module .\UrlThreatScanner.psm1 ```
-🛠️ Usage Examples
-Scenario 1: The "Live Response" (Forensics + Scan)
+Import-Module .\UrlThreatScanner.psm1
+
+## 🛠️ Usage Examples
+# Scenario 1: The "Live Response" (Forensics + Scan)
 You are on a suspicious machine. You want to dump the user's history and immediately check it for threats.
 
-PowerShell
+```powershell
 
 # Downloads NirSoft tools, dumps history to Temp, and scans it
 Invoke-UrlThreatScan -ScanMode SingleFile `
                      -ExportBrowsingHistory TrueOnline `
                      -ShowDebug
-Scenario 2: Offline Log Analysis
+
+# Scenario 2: Offline Log Analysis
 You have a CSV log file from a firewall or proxy (e.g., proxy_logs.csv) and want to check it against the threat DB.
 
 PowerShell
