@@ -21,6 +21,20 @@
 * **💥 Resilient CSV Parsing:**
     * Uses a custom-built parser to handle malformed, truncated, or non-standard CSV logs that often break standard PowerShell `Import-Csv` cmdlets.
 
+## 🛠️ Use Cases & Examples
+
+Use Case 1: Live Incident Response (Forensics + Scan)
+Scenario: You are investigating a potentially compromised endpoint. You need to verify if the user clicked a phishing link or downloaded malware. Action: The script downloads the necessary forensic tools, dumps the browser history to a temp folder, and scans it immediately.
+
+Use Case 2: Bulk Log Analysis
+Scenario: You have exported proxy logs or firewall logs (CSV format) from a network device and need to check them for Indicators of Compromise (IOCs).
+
+Use Case 3: Air-Gapped / Offline Investigation
+Scenario: You are performing forensics on a secure, offline machine. Action: Manually place BrowsingHistoryView.exe in the target folder and run the tool.
+
+📸 Screenshots
+<img width="1753" height="803" alt="explorer_pCKkZHdNj8" src="https://github.com/user-attachments/assets/c56575bc-e2cc-4ede-b1e5-b63050f0e07a" />
+
 ## 📦 Installation
 
 1. Download the `UrlThreatScanner.psm1` file.
