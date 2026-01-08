@@ -20,7 +20,7 @@
 Download the `.psm1` file and import the module:
 
 ```powershell
-Import-Module .\UrlThreatScanner.psm1
+Import-Module .\UrlThreatScanner.psm1 ```
 🛠️ Usage Examples
 Scenario 1: The "Live Response" (Forensics + Scan)
 You are on a suspicious machine. You want to dump the user's history and immediately check it for threats.
