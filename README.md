@@ -4,58 +4,65 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-**UrlThreatScanner** is a PowerShell module designed for Incident Response (IR) and Threat Hunting. It automates the extraction of browsing history from local endpoints and cross-references it against the [URLhaus](https://urlhaus.abuse.ch/) malicious URL database in real-time.
+**UrlThreatScanner** is a PowerShell module designed for **Digital Forensics** and **Incident Response (DFIR)**. It automates the extraction of local browsing history and performs a real-time cross-reference against the [URLhaus](https://urlhaus.abuse.ch/) malicious URL database.
 
-> **Key Use Case:** Rapidly identifying if a user visited known malware distribution sites or phished URLs during a forensic investigation.
+> **Key Advantage:** This tool bridges the gap between *forensic acquisition* and *threat intelligence*. It allows an analyst to instantly answer the question: *"Did this user visit a known malware distribution site?"* without manually exporting logs or checking external reputation engines one by one.
 
-## 🚀 Features
+## 🚀 Key Features
 
-* **🕵️‍♂️ Live Forensic Collection:** Automatically fetches and executes **BrowsingHistoryView** (NirSoft) to dump history from Chrome, Firefox, Edge, and more without installing agents.
-* **🧠 Intelligent Whitelisting:** Distinguishes between malicious *domains* and malicious *URLs* hosted on legitimate services (e.g., `google.com`, `dropbox.com`, `github.com`), reducing false positives.
-* **🛡️ Real-Time Intel:** Downloads the latest active threats from URLhaus before every scan.
-* **💥 Resilient Parsing:** Custom parser engine capable of reading malformed or truncated CSV logs that break standard `Import-Csv` cmdlets.
+* **🕵️‍♂️ Automated Live Forensics:**
+    * Integrates with **BrowsingHistoryView** (by NirSoft) to automatically scrape history from Chrome, Edge, Firefox, and other browsers on the endpoint.
+    * Supports both **Online** (auto-download tools) and **Offline** (air-gapped) forensic modes.
+* **🧠 Smart Whitelisting Engine:**
+    * Includes logic to distinguish between malicious *domains* vs. malicious *URLs* hosted on legitimate shared services.
+    * *Example:* A match on `drive.google.com` will only trigger if the *exact full path* matches a known malware file, preventing false positives on major cloud providers.
+* **🛡️ Real-Time Threat Intelligence:**
+    * Downloads the latest active threat feed from **URLhaus** before every scan to ensure detection of zero-day hosting sites.
+* **💥 Resilient CSV Parsing:**
+    * Uses a custom-built parser to handle malformed, truncated, or non-standard CSV logs that often break standard PowerShell `Import-Csv` cmdlets.
 
 ## 📦 Installation
 
-Download the `.psm1` file and import the module:
+1.  Download the `UrlThreatScanner.psm1` file.
+2.  Import the module into your PowerShell session:
 
 ```powershell
 Import-Module .\UrlThreatScanner.psm1
 
-## 🛠️ Usage Examples
-# Scenario 1: The "Live Response" (Forensics + Scan)
-You are on a suspicious machine. You want to dump the user's history and immediately check it for threats.
+## 🛠️ Use Cases & Examples
+Use Case 1: Live Incident Response (Forensics + Scan)
+
+Scenario: You are investigating a potentially compromised endpoint. You need to verify if the user clicked a phishing link or downloaded malware. Action: The script downloads the necessary forensic tools, dumps the browser history to a temp folder, and scans it immediately.
 
 ```powershell
-
-# Downloads NirSoft tools, dumps history to Temp, and scans it
+# Auto-download NirSoft tools, dump history, and scan
 Invoke-UrlThreatScan -ScanMode SingleFile `
                      -ExportBrowsingHistory TrueOnline `
                      -ShowDebug
 
-# Scenario 2: Offline Log Analysis
-You have a CSV log file from a firewall or proxy (e.g., proxy_logs.csv) and want to check it against the threat DB.
 
-PowerShell
+Use Case 2: Bulk Log Analysis
+Scenario: You have exported proxy logs or firewall logs (CSV format) from a network device and need to check them for Indicators of Compromise (IOCs).
 
+```powershell
+# Scan a specific log file against the threat DB
 Invoke-UrlThreatScan -ScanMode SingleFile `
                      -InputPath "C:\Logs\proxy_logs.csv" `
                      -ExportBrowsingHistory False
-Scenario 3: Air-Gapped / Offline Forensics
-If the machine has no internet, place BrowsingHistoryView.exe in the folder manually.
 
-PowerShell
-
+Use Case 3: Air-Gapped / Offline Investigation
+Scenario: You are performing forensics on a secure, offline machine. Action: Manually place BrowsingHistoryView.exe in the target folder and run the tool.
+```powershell
 Invoke-UrlThreatScan -ScanMode SingleFile `
                      -InputPath "C:\Forensics_Case_101" `
                      -ExportBrowsingHistory TrueOffline
+
 📸 Screenshots
 
-⚖️ Credits & Legal
-Threat Intelligence: Data provided by URLhaus / abuse.ch.
+⚖️ Credits & Acknowledgments
+Forensic Engine: This tool utilizes BrowsingHistoryView by NirSoft for the extraction of browser data. All credit for the underlying extraction technology goes to Nir Sofer.
 
-Forensic Engine: Browser history extraction powered by BrowsingHistoryView by NirSoft. This tool automatically downloads/utilizes NirSoft binaries if the forensic mode is enabled.
+Threat Intelligence: Malicious URL data is provided by URLhaus / abuse.ch.
 
-Note: Ensure you have authorization to run forensic tools on the target infrastructure.
-
-Created by Adi Mahluf
+⚠️ Disclaimer
+This tool is intended for legal forensic investigations and defensive cybersecurity purposes only. Ensure you have the proper authorization to scan and extract data from the target endpoints.
